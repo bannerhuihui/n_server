@@ -35,49 +35,6 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<WebSocketFra
 
     private static final long max_channelGroup = 2000;
 
-
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (null != msg && msg instanceof FullHttpRequest) {
-
-            FullHttpRequest request = (FullHttpRequest) msg;
-            String uri = request.uri();
-            String origin = request.headers().get("Origin");
-            if (null == origin) {
-                ctx.close();
-            } else {
-                if (null != uri && uri.contains(ProConfig.NETTY_URL.getCode()) && uri.contains("?")) {
-                    String[] uriArray = uri.split("\\?");
-                    if (null != uriArray && uriArray.length > 1) {
-                        String[] paramsArray = uriArray[1].split("=");
-                        if (null != paramsArray && paramsArray.length > 1) {
-                            if (StringUtils.equals(paramsArray[0], ProConfig.LOGIN_PAR.getCode())) {
-                                ReturnMessage successYN = null;
-                                if (StringUtils.isNotEmpty(paramsArray[1])) {
-                                    successYN = login(paramsArray[1]);
-                                }
-                                if (successYN != null && successYN.getCode() != SuccessCode.SUCCESS_LOGIN.getCode()) {
-                                    ctx.close();
-                                } else {
-                                    NettyCliention.ONLINE_USER.put(paramsArray[1], ctx);
-                                    NettyCliention.returnMessage(successYN, ctx,ProFunctionName.USER_LOGIN.getMessage());
-                                }
-                            } else {
-                                LOGGER.info("NettyServerHandler#channelRead参数传递错误！" + uriArray[1]);
-                                ctx.close();
-                            }
-                        }
-                    }
-                    request.setUri(ProConfig.NETTY_URL.getCode());
-                } else {
-                    ctx.close();
-                }
-            }
-
-        }
-        super.channelRead(ctx, msg);
-    }
-
     /**
      * 执行统一认证逻辑
      *

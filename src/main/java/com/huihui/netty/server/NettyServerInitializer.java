@@ -49,7 +49,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         //TimeUnit.MINUTES      分
         //TimeUnit.SECONDS      秒
         //TimeUnit.MILLISECONDS 毫秒
-        pipeline.addLast(new IdleStateHandler(1,1,1, TimeUnit.MINUTES));
+        pipeline.addLast(new IdleStateHandler(30,30,30, TimeUnit.MINUTES));
         pipeline.addLast(new SslHandler(engine));
         //websocket协议本身是基于http协议的，所以这边也要使用http解编码器
         pipeline.addLast(new HttpServerCodec());
@@ -61,10 +61,10 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new HttpObjectAggregator(8192));
         //ws://localhost:9999/ws
         pipeline.addLast(new WebSocketServerCompressionHandler());
+        pipeline.addLast(new WebSocketServerProtocolHandler("/ws",null,true));
         pipeline.addLast(new LineBasedFrameDecoder(1024));
         pipeline.addLast(new StringDecoder());
         pipeline.addLast(new NettyServerHandler());
-        pipeline.addLast(new WebSocketServerProtocolHandler("/ws",null,true,10485760));
 
     }
 }
