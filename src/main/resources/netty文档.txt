@@ -1,0 +1,10 @@
+netty接口
+
+1.netty服务连接
+    功能介绍：
+    来接netty服务的时候，需要传递对应的token信息，只有token正确才可以登录
+连接示例：
+    socket = new WebSocket("wss://www.hubanqipei.com:13145/ws?token=sojweyh-kjkwfh-form-ksjhqu12451314531");
+    token解析规则
+
+
