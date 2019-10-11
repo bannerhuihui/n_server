@@ -1,5 +1,7 @@
 package com.huihui.netty.pojo;
 
+import com.huihui.netty.util.Base64Util;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +18,8 @@ public class ReturnMessage implements Serializable {
     private int code;
 
     private int type;
+
+    private String message;
 
     public String getFrom() {
         return from;
@@ -41,6 +45,11 @@ public class ReturnMessage implements Serializable {
         this.code = code;
     }
 
+    public void setCode(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public int getType() {
         return type;
     }
@@ -49,7 +58,23 @@ public class ReturnMessage implements Serializable {
         this.type = type;
     }
 
-    public ReturnMessage(String from , int type){
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setBaseContent(String content) {
+        this.content = Base64Util.encode(content);
+    }
+
+    public String getBaseContent(String content) {
+        return Base64Util.decode(content);
+    }
+
+    public ReturnMessage(String from, int type) {
         this.type = type;
         this.from = from;
     }

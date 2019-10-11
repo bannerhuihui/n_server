@@ -2,9 +2,7 @@ package com.huihui.netty.server;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huihui.netty.common.NettyCliention;
-import com.huihui.netty.common.ProConfig;
 import com.huihui.netty.common.ProFunctionName;
-import com.huihui.netty.common.SuccessCode;
 import com.huihui.netty.pojo.ReadMessage;
 import com.huihui.netty.pojo.ReturnMessage;
 import com.huihui.netty.strategy.common.Context;
@@ -14,15 +12,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.bcel.BcelGenericSignatureToTypeXConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,22 +25,9 @@ import java.net.InetSocketAddress;
 public class NettyServerHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyServerHandler.class);
 
-    private static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static ChannelGroup channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     private static final long max_channelGroup = 2000;
-
-    /**
-     * 执行统一认证逻辑
-     *
-     * @param s
-     * @return
-     */
-    private ReturnMessage login(String s) {
-        LOGGER.info("NettyServerHandler#channelRead#login入参" + s);
-        UserLogin userLogin = new UserLogin();
-        return userLogin.login(s);
-    }
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame msg) {
@@ -65,7 +46,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<WebSocketFra
             context.result(message, ctx);
         } else {
             ReturnMessage returnMessage = new ReturnMessage(message.getFrom(), message.getType());
-            NettyCliention.returnMessage(returnMessage, ctx, "NettyServerHandler#channelRead0");
+            NettyCliention.returnMessage(returnMessage, ctx, ProFunctionName.MESSAGE_ERROR.getMessage());
         }
 
     }

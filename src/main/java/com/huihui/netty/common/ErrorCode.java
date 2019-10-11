@@ -1,6 +1,5 @@
 package com.huihui.netty.common;
 
-import java.io.Serializable;
 
 /**
  * @className: ErrorCode
@@ -10,6 +9,7 @@ import java.io.Serializable;
  * @version: 1.0
  */
 public enum ErrorCode{
+
     MESSAGE_FROM_NULL(10001,"from为null或空"),
 
     LOGIN_OUT(10002, "登录超时"),
@@ -44,7 +44,13 @@ public enum ErrorCode{
 
     LOGIN_ERROR(10017,"用户连接登录失败"),
 
-    LOGIN_TOKEN_ERROR(10018,"Token错误")
+    MESSAGE_FROM_ERROR(10019,"from格式错误"),
+
+    LOGIN_USER_ID_NULL(10020,"用户登录时，用户ID传递的为null"),
+
+    LOGIN_USER_NULL(10021,"登录用户为非法用户"),
+
+    LOGIN_CLINE_ERROR(10022,"java客户端登录from错误")
 
     ;
 

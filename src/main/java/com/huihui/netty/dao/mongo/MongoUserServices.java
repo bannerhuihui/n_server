@@ -2,7 +2,6 @@ package com.huihui.netty.dao.mongo;
 
 import com.alibaba.fastjson.JSONObject;
 import com.huihui.netty.common.MongoClicationName;
-import com.huihui.netty.common.ProFunctionName;
 import com.huihui.netty.common.StateConfig;
 import com.huihui.netty.pojo.UserPojo;
 import com.mongodb.WriteResult;
@@ -16,12 +15,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 @Service
-public class MongoLoginServices {
+public class MongoUserServices {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MongoLoginServices.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoUserServices.class);
 
     @Autowired
     private MongoTemplate template;
@@ -31,8 +28,8 @@ public class MongoLoginServices {
      * @param userPojo
      * @return
      */
-    public boolean saveLoginUser(UserPojo userPojo){
-        LOGGER.info("MongoLoginServices#saveLoginUser保存用户的登录信息，入参："+ JSONObject.toJSONString(userPojo));
+    public boolean saveUser(UserPojo userPojo){
+        LOGGER.info("MongoUserServices#saveUser保存用户的登录信息，入参："+ JSONObject.toJSONString(userPojo));
         if(userPojo!= null){
             try {
                 template.save(userPojo, MongoClicationName.USER_LOGIN.getName());
@@ -50,8 +47,8 @@ public class MongoLoginServices {
      * @param userId
      * @return
      */
-    public UserPojo queryUserPojoByUserId(int userId){
-        LOGGER.info("MongoLoginServices#queryUserPojoByUserId查询用户的登录信息，入参："+ userId);
+    public UserPojo queryUserByUserId(int userId){
+        LOGGER.info("MongoUserServices#queryUserByUserId查询用户的登录信息，入参："+ userId);
         if(userId != 0){
             Query query = new Query();
             Criteria criteria = new Criteria();
@@ -59,7 +56,7 @@ public class MongoLoginServices {
             criteria.and("userId").is(userId);
             query.addCriteria(criteria);
             UserPojo userPojo = template.findOne(query, UserPojo.class, MongoClicationName.USER_LOGIN.getName());
-            LOGGER.info("MongoLoginServices#queryUserPojoByUserId查询用户的登录信息，出参："+ JSONObject.toJSONString(userPojo));
+            LOGGER.info("MongoUserServices#queryUserByUserId查询用户的登录信息，出参："+ JSONObject.toJSONString(userPojo));
             return userPojo;
         }
         return null;
@@ -72,7 +69,7 @@ public class MongoLoginServices {
      * @return
      */
     public boolean updateUserByUserId(UserPojo userPojo){
-        LOGGER.info("MongoLoginServices#updateUserLogin更新用户登录状态入参："+ JSONObject.toJSONString(userPojo));
+        LOGGER.info("MongoUserServices#updateUserByUserId更新用户登录状态入参："+ JSONObject.toJSONString(userPojo));
         if(userPojo.getUserId() == 0){
             return false;
         }
@@ -101,7 +98,7 @@ public class MongoLoginServices {
             update.set("state",userPojo.getState());
         }
         WriteResult updUser = template.updateMulti(query, update, UserPojo.class, MongoClicationName.USER_LOGIN.getName());
-        LOGGER.info("MongoLoginServices#updateUserLogin更新用户登录状态，修改结果："+ (updUser.isUpdateOfExisting() ? "成功！":"失败！"));
+        LOGGER.info("MongoUserServices#updateUserByUserId更新用户登录状态，修改结果："+ (updUser.isUpdateOfExisting() ? "成功！":"失败！"));
         return updUser.isUpdateOfExisting();
     }
 

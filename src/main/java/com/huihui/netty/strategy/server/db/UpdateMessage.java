@@ -5,12 +5,14 @@ import com.huihui.netty.pojo.ReadMessage;
 import com.huihui.netty.pojo.ReturnMessage;
 import com.huihui.netty.pojo.UserPojo;
 
+public abstract class UpdateMessage extends DaoServer {
 
-public abstract class QueryMessage extends DaoServer {
 
-    public ReturnMessage queryReadMessage(ReadMessage message){
+    public ReturnMessage updateMessage(ReadMessage message) {
         return null;
     }
 
-    public ReturnMessage queryUser(UserPojo user){return null;}
+    public ReturnMessage updateUser(UserPojo userPojo) {
+        return null;
+    }
 }

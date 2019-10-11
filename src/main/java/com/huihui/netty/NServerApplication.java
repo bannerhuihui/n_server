@@ -4,8 +4,6 @@ import com.huihui.netty.server.NettyServer;
 import com.spring4all.mongodb.EnableMongoPlus;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.context.ConfigurableApplicationContext;
 
 @EnableMongoPlus
 @SpringBootApplication

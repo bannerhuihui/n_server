@@ -14,7 +14,9 @@ import com.huihui.netty.strategy.common.util.StrategyUtils;
 public class HandlerFactory {
 
     String[] clazzName = {
-
+            "UserLogin",
+            "CliLogin",
+            "Heard"
     };
 
     /**

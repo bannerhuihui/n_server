@@ -1,12 +1,12 @@
 package com.huihui.netty.strategy.server.check;
 
 import com.huihui.netty.pojo.ReadMessage;
-import com.huihui.netty.pojo.UserPojo;
+import com.huihui.netty.pojo.ReturnMessage;
 
 public abstract class CheckFrom {
 
-    public boolean checkFrom(ReadMessage message){
-        return false;
+    public ReturnMessage checkFrom(ReadMessage message){
+        return null;
     }
 
 }

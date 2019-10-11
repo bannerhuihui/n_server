@@ -1,22 +1,19 @@
 package com.huihui.netty.strategy.common;
 
 import com.huihui.netty.pojo.ReadMessage;
+import com.huihui.netty.pojo.ReturnMessage;
 import com.huihui.netty.pojo.UserPojo;
 import com.huihui.netty.strategy.common.util.StrategyUtils;
 import com.huihui.netty.strategy.server.check.CheckCc;
 import com.huihui.netty.strategy.server.check.CheckContent;
 import com.huihui.netty.strategy.server.check.CheckFrom;
 import com.huihui.netty.strategy.server.check.CheckTo;
+import com.huihui.netty.strategy.server.check.impl.CheckClineFrom;
 import com.huihui.netty.strategy.server.check.impl.CheckFromDefault;
 import com.huihui.netty.strategy.server.db.QueryMessage;
 import com.huihui.netty.strategy.server.db.SaveMessage;
-import com.huihui.netty.strategy.server.db.UpdateMesage;
+import com.huihui.netty.strategy.server.db.UpdateMessage;
 import io.netty.channel.ChannelHandlerContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.List;
 
 
 /**
@@ -30,13 +27,11 @@ import java.util.List;
  */
 public abstract class HandlerStrategy {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HandlerStrategy.class);
-
     private SaveMessage saveMessage;
 
     private QueryMessage queryMessage;
 
-    private UpdateMesage updateMesage;
+    private UpdateMessage updateMesage;
 
     private CheckFrom checkFrom;
 
@@ -51,7 +46,7 @@ public abstract class HandlerStrategy {
     public abstract void contentDistribution(ReadMessage message, ChannelHandlerContext ctx);
 
 
-    public List<ReadMessage> queryReadMessage(ReadMessage message, Class<?> queryMessage){
+    public ReturnMessage queryReadMessage(ReadMessage message, Class<?> queryMessage){
         Object obj = StrategyUtils.classToJava(queryMessage);
         if(obj instanceof  QueryMessage){
             this.queryMessage = (QueryMessage) obj;
@@ -60,7 +55,7 @@ public abstract class HandlerStrategy {
         return null;
     }
 
-    public List<String> checkTo(ReadMessage message,Class<?> checkTo){
+    public ReturnMessage checkTo(ReadMessage message, Class<?> checkTo){
         Object obj = StrategyUtils.classToJava(checkTo);
         if(obj instanceof  CheckTo){
             this.checkTo = (CheckTo) obj;
@@ -69,7 +64,7 @@ public abstract class HandlerStrategy {
         return null;
     }
 
-    public List<String> checkCc(ReadMessage message,Class<?> checkCc){
+    public ReturnMessage checkCc(ReadMessage message,Class<?> checkCc){
         Object obj = StrategyUtils.classToJava(checkCc);
         if(obj instanceof  CheckCc){
             this.checkCc = (CheckCc) obj;
@@ -78,16 +73,16 @@ public abstract class HandlerStrategy {
         return null;
     }
 
-    public boolean saveReadMessage(ReadMessage message,Class<?> saveMessage){
+    public ReturnMessage saveReadMessage(ReadMessage message,Class<?> saveMessage){
         Object obj = StrategyUtils.classToJava(saveMessage);
         if(obj instanceof  SaveMessage){
             this.saveMessage = (SaveMessage) obj;
             return this.saveMessage.saveMessage(message);
         }
-        return false;
+        return null;
     }
 
-    public HashMap<String,Object> checkContent(ReadMessage message, Class<?> checkContent){
+    public ReturnMessage checkContent(ReadMessage message, Class<?> checkContent){
         Object obj = StrategyUtils.classToJava(checkContent);
         if(obj instanceof  CheckContent){
             this.checkContent = (CheckContent) obj;
@@ -96,37 +91,68 @@ public abstract class HandlerStrategy {
         return null;
     }
 
-    public boolean checkFrom(ReadMessage message,Class<?> checkFrom){
+    public ReturnMessage checkFrom(ReadMessage message,Class<?> checkFrom){
         Object obj = StrategyUtils.classToJava(checkFrom);
         if(obj instanceof  CheckFrom){
             this.checkFrom = (CheckFrom) obj;
             return this.checkFrom.checkFrom(message);
         }
-        return false;
+        return null;
     }
 
-    public boolean checkFrom (ReadMessage message){
+    public ReturnMessage checkFrom (ReadMessage message){
         this.checkFrom = new CheckFromDefault();
         return this.checkFrom.checkFrom(message);
     }
 
-    public boolean updateReadMessage(ReadMessage message,Class<?> updateMessage){
+    public ReturnMessage updateReadMessage(ReadMessage message,Class<?> updateMessage){
         Object obj = StrategyUtils.classToJava(updateMessage);
-        if(obj instanceof  UpdateMesage){
-            this.updateMesage = (UpdateMesage) obj;
+        if(obj instanceof UpdateMessage){
+            this.updateMesage = (UpdateMessage) obj;
             return this.updateMesage.updateMessage(message);
-        }
-        return false;
-    }
-
-    public UserPojo checkContentLogin(ReadMessage message, Class<?> login){
-        Object obj = StrategyUtils.classToJava(login);
-        if(obj instanceof  CheckContent){
-            this.checkContent = (CheckContent) obj;
-            return this.checkContent.login(message);
         }
         return null;
     }
 
+    public ReturnMessage checkContentLogin(ReadMessage message, Class<?> login){
+        Object obj = StrategyUtils.classToJava(login);
+        if(obj instanceof  CheckContent){
+            this.checkContent = (CheckContent) obj;
+            return this.checkContent.checkContent(message);
+        }
+        return null;
+    }
+
+    public ReturnMessage queryUser(UserPojo userPojo,Class<?> queryUser){
+        Object obj = StrategyUtils.classToJava(queryUser);
+        if(obj instanceof QueryMessage){
+            this.queryMessage = (QueryMessage) obj;
+            return this.queryMessage.queryUser(userPojo);
+        }
+        return null;
+    }
+
+    public ReturnMessage saveUser(UserPojo userPojo,Class<?> saveUser){
+        Object obj = StrategyUtils.classToJava(saveUser);
+        if(obj instanceof SaveMessage){
+            this.saveMessage = (SaveMessage) obj;
+            return this.saveMessage.saveUser(userPojo);
+        }
+        return null;
+    }
+
+    public ReturnMessage updateUser(UserPojo userPojo,Class<?> updateUser){
+        Object obj = StrategyUtils.classToJava(updateUser);
+        if(obj instanceof UpdateMessage){
+            this.updateMesage = (UpdateMessage) obj;
+            return this.updateMesage.updateUser(userPojo);
+        }
+        return null;
+    }
+
+    public ReturnMessage checkJavaCline(ReadMessage message){
+        this.checkFrom = new CheckClineFrom();
+        return checkFrom.checkFrom(message);
+    }
 
 }

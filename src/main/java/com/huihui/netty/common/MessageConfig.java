@@ -13,7 +13,8 @@ public enum  MessageConfig {
     KF_HEARD_CONTENT_TYPE(2,"客服心跳"),
     GZH_HEARD_CONTENT_TYPE(3,"公众号心跳"),
     XCX_HEARD_CONTENT_TYPE(4,"小程序心跳"),
-    APP_HEARD_CONTENT_TYPE(5,"APP心跳")
+    APP_HEARD_CONTENT_TYPE(5,"APP心跳"),
+    JAVA_CLIENT_HEARD_CONTENT_TYPE(6,"java客户端心跳")
     ;
 
     private int type;

@@ -5,7 +5,6 @@ import com.huihui.netty.pojo.ReturnMessage;
 import com.huihui.netty.pojo.UserPojo;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.json.JsonObjectDecoder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +17,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NettyCliention {
 
-    public static final String[] _TAG = {"APP", "PZB", "KF", "GZH", "XCX"};
+    public static final String[] _TAG = {"APP", "DSP", "KF", "GZH", "XCX"};
 
     private static NettyCliention _this = null;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NettyCliention.class);
 
     public static Map<String, ChannelHandlerContext> ONLINE_USER = new ConcurrentHashMap<>();
+
+    public static Map<String, ChannelHandlerContext> CLINE_USER = new ConcurrentHashMap<>();
 
     // 单例线程锁
     private static Object lock = new Object();
@@ -35,7 +36,8 @@ public class NettyCliention {
     // 用户登录状态
     public static Map<String, Integer> SWITCHES = new ConcurrentHashMap<>();
 
-    public static Map<String, JSONObject> HEARD_STATE = new HashMap<>();
+    //java客户端发送的心跳信息
+    public static Map<String, String> JAVA_CLIENT_HEAD = new HashMap<>();
 
     public static Map<Integer, BitSet> USER_STATE = new HashMap<>();
 
@@ -96,6 +98,7 @@ public class NettyCliention {
             }
             if (StringUtils.isNotEmpty(contextId)) {
                 ONLINE_USER.remove(contextId);
+                JAVA_CLIENT_HEAD.remove(contextId);
             }
         }
 
@@ -143,5 +146,27 @@ public class NettyCliention {
     public static List<UserPojo> queryOnlineUser() {
         //TODO 返回在线的用户信息
         return null;
+    }
+
+
+    public static void saveOrUpdJavaClient(String from,ChannelHandlerContext ctx){
+        CLINE_USER.put(from, ctx);
+    }
+
+    public static void saveOrUpdClient(String from, ChannelHandlerContext ctx){
+        synchronized (ONLINE_USER_LOCK) {
+            ONLINE_USER.put(from, ctx);
+        }
+    }
+
+    /**
+     * 给所有的客户端发送消息
+     * @param message
+     */
+    public static void pushAllCli(ReturnMessage message){
+        List<ChannelHandlerContext> channelHandlerContexts = queryAllChannel();
+        for (ChannelHandlerContext ctx: channelHandlerContexts) {
+            returnMessage(message,ctx,ProFunctionName.PUSH_ALL_MESSAGE.getMessage());
+        }
     }
 }

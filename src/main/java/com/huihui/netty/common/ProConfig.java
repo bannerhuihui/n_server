@@ -13,7 +13,11 @@ public enum ProConfig {
 
     NETTY_URL("/ws", "netty url后缀"),
 
-    SERVER_NAME("n_server","netty服务端名称")
+    CLIENT_NAME("CLI_9090","客户端名称"),
+
+    SERVER_NAME("n_server","netty服务端名称"),
+
+    HEARD_CONTENT("ping-pong-ping-pong","心跳发送字段")
     ;
 
 

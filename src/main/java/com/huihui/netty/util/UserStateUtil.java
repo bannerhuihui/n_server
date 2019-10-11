@@ -1,6 +1,5 @@
 package com.huihui.netty.util;
 
-import com.huihui.netty.common.NettyCliention;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
